@@ -1,34 +1,50 @@
-function add(a: number, b: number) {
-  return a + b;
+import { CLEAR, CLICK_EVENT } from "./constants";
+import { add, divide, multiply, subtract } from "./utils";
+
+let mathOperator: string | undefined;
+let firstOperand, secondOperand: number | undefined;
+let screen = document.querySelector(".screen");
+
+function addClearBtnEvent(clearBtn: HTMLButtonElement) {
+  clearBtn.addEventListener(CLICK_EVENT, () => {
+    if (screen != null) {
+      screen.textContent = "";
+    }
+
+    mathOperator = firstOperand = secondOperand = undefined;
+  });
 }
 
-function subtract(a: number, b: number) {
-  return a - b;
-}
-
-function multiply(a: number, b: number) {
-  return a * b;
-}
-
-function divide(a: number, b: number) {
-  return a / b;
-}
-
-let mathOperator: string;
-let firstOperand: number;
-let secondOperand: number;
-
-function operate(mathComputation: Map<string, Function>) {
-  let operation = mathComputation.get(mathOperator);
-  return operation(firstOperand, secondOperand);
+function addNumberBtnEvent(numberBtn: HTMLButtonElement) {
+  numberBtn.addEventListener(CLICK_EVENT, () => {
+    if (screen != null) {
+      screen.textContent += numberBtn.textContent;
+    }
+  });
 }
 
 function main() {
   let mathComputation = new Map<string, Function>();
-  mathComputation.set("add", add);
-  mathComputation.set("subtract", subtract);
-  mathComputation.set("multiply", multiply);
-  mathComputation.set("divide", divide);
+  mathComputation.set("+", add);
+  mathComputation.set("-", subtract);
+  mathComputation.set("*", multiply);
+  mathComputation.set("/", divide);
+
+  let btns = document.querySelectorAll("button");
+  for (let i = 0; i < btns.length; i++) {
+    const buttonContent = btns[i].textContent;
+    if (buttonContent == CLEAR) {
+      addClearBtnEvent(btns[i]);
+      continue;
+    }
+
+    const parsedInt = parseInt(buttonContent);
+    const isInteger = Number.isInteger(parsedInt);
+    if (isInteger == true) {
+      addNumberBtnEvent(btns[i]);
+      continue;
+    }
+  }
 }
 
 main();
