@@ -24,7 +24,6 @@ body {
 .btns {
   display: flex;
   justify-content: center;
-  /* margin: 18px; */
 }
 
 .screen {
@@ -38,6 +37,7 @@ body {
   padding-right: 12px;
   padding-bottom: 12px;
   font-size: 45px;
+  overflow: hidden;
 }
 
 button {
