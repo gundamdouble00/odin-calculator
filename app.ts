@@ -1,5 +1,11 @@
-import { CLEAR, CLICK_EVENT } from "./constants";
-import { add, divide, multiply, operate, subtract } from "./utils";
+import {
+  CLEAR,
+  CLICK_EVENT,
+  COMPUTATIONS,
+  MATH_COMPUTATIONS,
+  NUMBERS,
+} from "./constants";
+import { operate } from "./utils";
 
 let operator: string | undefined;
 let firstOperand: number | undefined;
@@ -125,12 +131,6 @@ function addComputationBtnEvent(computationBtn: HTMLButtonElement) {
 }
 
 function main() {
-  let mathComputation = new Map<string, Function>();
-  mathComputation.set("+", add);
-  mathComputation.set("-", subtract);
-  mathComputation.set("*", multiply);
-  mathComputation.set("/", divide);
-
   let btns = document.querySelectorAll("button");
   for (let i = 0; i < btns.length; i++) {
     const buttonContent = btns[i].textContent;
@@ -148,6 +148,30 @@ function main() {
 
     addComputationBtnEvent(btns[i]);
   }
+
+  document.addEventListener("keydown", (event) => {
+    const keyName = event.key;
+    const fakeClick = new Event("click");
+    if (keyName === "C") {
+      const clearBtn = document.querySelector("button.clear");
+      clearBtn?.dispatchEvent(fakeClick);
+      return;
+    }
+
+    if ("0" <= keyName && keyName <= "9") {
+      const num = parseInt(keyName);
+      const numberBtn = document.querySelector(`button.${NUMBERS[num]}`);
+      numberBtn?.dispatchEvent(fakeClick);
+      return;
+    }
+
+    if (MATH_COMPUTATIONS.includes(keyName)) {
+      const resultBtn = document.querySelector(
+        `button.${COMPUTATIONS.get(keyName)}`,
+      );
+      resultBtn?.dispatchEvent(fakeClick);
+    }
+  });
 }
 
 main();

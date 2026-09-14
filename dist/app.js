@@ -1,6 +1,25 @@
 // constants.ts
 var CLICK_EVENT = "click";
+var MATH_COMPUTATIONS = ["+", "-", "*", "/", "="];
+var COMPUTATIONS = new Map;
+COMPUTATIONS.set("+", "add");
+COMPUTATIONS.set("-", "subtract");
+COMPUTATIONS.set("*", "multiply");
+COMPUTATIONS.set("/", "divide");
+COMPUTATIONS.set("=", "result");
 var CLEAR = "C";
+var NUMBERS = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "siz",
+  "seven",
+  "eight",
+  "nine"
+];
 
 // utils.ts
 function add(a, b) {
@@ -120,11 +139,6 @@ function addComputationBtnEvent(computationBtn) {
   });
 }
 function main() {
-  let mathComputation = new Map;
-  mathComputation.set("+", add);
-  mathComputation.set("-", subtract);
-  mathComputation.set("*", multiply);
-  mathComputation.set("/", divide);
   let btns = document.querySelectorAll("button");
   for (let i = 0;i < btns.length; i++) {
     const buttonContent = btns[i].textContent;
@@ -140,5 +154,24 @@ function main() {
     }
     addComputationBtnEvent(btns[i]);
   }
+  document.addEventListener("keydown", (event) => {
+    const keyName = event.key;
+    const fakeClick = new Event("click");
+    if (keyName === "C") {
+      const clearBtn = document.querySelector("button.clear");
+      clearBtn?.dispatchEvent(fakeClick);
+      return;
+    }
+    if ("0" <= keyName && keyName <= "9") {
+      const num = parseInt(keyName);
+      const numberBtn = document.querySelector(`button.${NUMBERS[num]}`);
+      numberBtn?.dispatchEvent(fakeClick);
+      return;
+    }
+    if (MATH_COMPUTATIONS.includes(keyName)) {
+      const resultBtn = document.querySelector(`button.${COMPUTATIONS.get(keyName)}`);
+      resultBtn?.dispatchEvent(fakeClick);
+    }
+  });
 }
 main();
